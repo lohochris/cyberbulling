@@ -81,12 +81,12 @@ const resources: Resource[] = [
   },
   {
     id: 'workplace-2',
-    title: 'LinkedIn Safety Center',
+    title: 'Official LinkedIn Safety / Security Center',
     description: 'Specific tools and settings for protecting your professional reputation and reporting abuse.',
     category: 'workplace',
     icon: Building2,
     type: 'guide',
-    url: 'https://www.linkedin.com/help/linkedin/answer/a1341014'
+    url: 'https://security.linkedin.com/'
   },
   {
     id: 'safety-1',
