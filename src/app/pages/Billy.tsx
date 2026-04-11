@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+// 1. Import track from Vercel Analytics
+import { track } from '@vercel/analytics'; 
 import { 
   Bot, 
   Send, 
@@ -53,6 +55,12 @@ export default function Billy() {
 
     if (!isInitial) {
       addChatMessage({ role: 'user', content: messageToSend });
+      
+      // 2. Track message sent event for interaction reports
+      track('billy_message_sent', { 
+        is_quick_starter: quickStarters.includes(messageToSend),
+        message_length: messageToSend.length 
+      });
     }
 
     setInputValue('');
@@ -61,7 +69,7 @@ export default function Billy() {
     try {
       const response = await getBillyResponse(messageToSend);
 
-      // ✅ safeguard against empty/invalid response
+      // Safeguard against empty/invalid response
       const finalMessage =
         response?.message && response.message.trim().length > 0
           ? response.message
@@ -76,7 +84,9 @@ export default function Billy() {
     } catch (error) {
       console.error("Billy Error:", error);
 
-      // ✅ fallback message shown to user
+      // 3. Track errors to monitor system stability
+      track('billy_error', { error: String(error) });
+
       addChatMessage({
         role: 'billy',
         content: "Something went wrong. Please try again.",
@@ -84,12 +94,13 @@ export default function Billy() {
       });
 
     } finally {
-      // ✅ always reset typing state
       setIsTyping(false);
     }
   };
 
   const handleQuickStarter = (message: string) => {
+    // 4. Track which specific quick starters users find most helpful
+    track('billy_quick_starter_clicked', { label: message });
     handleSendMessage(message);
   };
 
@@ -149,7 +160,10 @@ export default function Billy() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={clearChatHistory}
+                    onClick={() => {
+                      track('billy_chat_cleared'); // 5. Track when users reset the conversation
+                      clearChatHistory();
+                    }}
                     className="text-slate-400 hover:text-rose-400 hover:bg-white/10"
                   >
                     <Trash2 size={18} />

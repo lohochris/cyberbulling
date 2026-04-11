@@ -1,4 +1,6 @@
 import { Outlet, Link, useLocation } from 'react-router';
+// 1. Import the Analytics component
+import { Analytics } from '@vercel/analytics/react'; 
 import { 
   Shield, 
   BookOpen, 
@@ -176,6 +178,9 @@ export function Layout() {
           </div>
         </div>
       </footer>
+
+      {/* 2. Place the component here so it captures all page views */}
+      <Analytics />
     </div>
   );
 }
