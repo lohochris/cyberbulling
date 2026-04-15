@@ -1,20 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { track } from '@vercel/analytics'; 
-import { 
-  Bot, 
-  Send, 
-  User, 
-  Clock
-} from 'lucide-react';
+import { track } from '@vercel/analytics';
+import { Send } from 'lucide-react';
 
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-import { Card, CardContent } from '../components/ui/card';
-import { ScrollArea } from '../components/ui/scroll-area';
+import { Card } from '../components/ui/card';
 
 import { useStore } from '../store/useStore';
-import { getBillyResponse, getEmergencyResources } from '../services/billyAI';
+import { getBillyResponse } from '../services/billyAI';
 
 const quickStarters = [
   "I'm experiencing harassment online",
@@ -25,21 +19,15 @@ const quickStarters = [
 ];
 
 export default function Billy() {
-  const { billyChatHistory, addChatMessage, clearChatHistory } = useStore();
+  const { billyChatHistory, addChatMessage } = useStore();
 
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const scrollContainer = scrollRef.current?.querySelector('[data-slot="scroll-area-viewport"]');
-    if (scrollContainer) {
-      scrollContainer.scrollTo({
-        top: scrollContainer.scrollHeight,
-        behavior: 'smooth'
-      });
-    }
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [billyChatHistory, isTyping]);
 
   useEffect(() => {
@@ -52,18 +40,17 @@ export default function Billy() {
     const messageToSend = message || inputValue.trim();
     if (!messageToSend) return;
 
-    // Add user message
     if (!isInitial) {
-      addChatMessage({ 
+      addChatMessage({
         id: crypto.randomUUID(),
-        role: 'user', 
+        role: 'user',
         content: messageToSend,
         timestamp: Date.now()
       });
 
-      track('billy_message_sent', { 
+      track('billy_message_sent', {
         is_quick_starter: quickStarters.includes(messageToSend),
-        message_length: messageToSend.length 
+        message_length: messageToSend.length
       });
     }
 
@@ -71,7 +58,6 @@ export default function Billy() {
     setIsTyping(true);
 
     try {
-      // ✅ FIXED: INCLUDE CURRENT MESSAGE IN HISTORY
       const updatedHistory = [
         ...billyChatHistory.map(msg => ({
           role: msg.role === 'billy' ? 'assistant' : 'user',
@@ -86,13 +72,11 @@ export default function Billy() {
       const response = await getBillyResponse(messageToSend, updatedHistory);
 
       const finalMessage =
-        response?.message && response.message.trim().length > 0
-          ? response.message
-          : "I couldn’t generate a response. Please try again.";
+        response?.message?.trim() || "I couldn’t generate a response.";
 
-      addChatMessage({ 
+      addChatMessage({
         id: crypto.randomUUID(),
-        role: 'billy', 
+        role: 'billy',
         content: finalMessage,
         suggestedActions: response?.suggestedActions || [],
         timestamp: Date.now()
@@ -116,11 +100,6 @@ export default function Billy() {
     }
   };
 
-  const handleQuickStarter = (message: string) => {
-    track('billy_quick_starter_clicked', { label: message });
-    handleSendMessage(message);
-  };
-
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -129,63 +108,70 @@ export default function Billy() {
   };
 
   const formatTime = (timestamp: number) => {
-    return new Date(timestamp).toLocaleTimeString('en-GB', { 
-      hour: '2-digit', 
-      minute: '2-digit' 
+    return new Date(timestamp).toLocaleTimeString('en-GB', {
+      hour: '2-digit',
+      minute: '2-digit'
     });
   };
 
   return (
-    <div className="min-h-screen py-6 bg-slate-50">
-      <div className="max-w-4xl mx-auto px-4">
+    <div className="h-[calc(100vh-120px)] flex justify-center items-center bg-slate-50 px-4">
+      
+      {/* 📘 CHAT CARD */}
+      <Card className="w-full max-w-3xl h-full flex flex-col shadow-xl rounded-2xl overflow-hidden">
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-center mb-6"
-        >
-          <h1 className="text-3xl font-bold">Talk to Billy</h1>
-        </motion.div>
+        {/* HEADER */}
+        <div className="p-4 border-b text-center font-semibold text-lg bg-white">
+          Talk to Billy
+        </div>
 
-        <Card className="flex flex-col h-[600px]">
-          <CardContent className="flex flex-col flex-1 p-0">
+        {/* 💬 MESSAGES AREA */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50">
 
-            <ScrollArea className="flex-1" ref={scrollRef}>
-              <div className="p-4 space-y-4">
+          {billyChatHistory.map((message) => (
+            <div
+              key={message.id}
+              className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
+              <div
+                className={`
+                  max-w-[75%] p-3 rounded-2xl text-sm shadow-sm
+                  ${message.role === 'user'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white text-gray-800 border'}
+                `}
+              >
+                <p className="whitespace-pre-wrap">{message.content}</p>
 
-                {billyChatHistory.map((message) => (
-                  <div key={message.id} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                    <div className="max-w-[75%] bg-slate-100 p-3 rounded-xl">
-                      <p className="whitespace-pre-wrap">{message.content}</p>
-                      <div className="text-xs mt-1 opacity-50">
-                        {formatTime(message.timestamp)}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-
-                {isTyping && <p className="text-sm text-gray-500">Billy is thinking...</p>}
-
+                <div className="text-[10px] mt-1 opacity-60 text-right">
+                  {formatTime(message.timestamp)}
+                </div>
               </div>
-            </ScrollArea>
-
-            <div className="p-3 border-t flex gap-2">
-              <Input
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={handleKeyPress}
-                placeholder="Ask Billy anything..."
-                disabled={isTyping}
-              />
-              <Button onClick={() => handleSendMessage()} disabled={isTyping}>
-                <Send size={16} />
-              </Button>
             </div>
+          ))}
 
-          </CardContent>
-        </Card>
+          {isTyping && (
+            <p className="text-sm text-gray-500">Billy is thinking...</p>
+          )}
 
-      </div>
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* ✍️ INPUT AREA */}
+        <div className="p-3 border-t bg-white flex gap-2">
+          <Input
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={handleKeyPress}
+            placeholder="Ask Billy anything..."
+            disabled={isTyping}
+          />
+          <Button onClick={() => handleSendMessage()} disabled={isTyping}>
+            <Send size={16} />
+          </Button>
+        </div>
+
+      </Card>
     </div>
   );
 }
