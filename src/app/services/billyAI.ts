@@ -1,8 +1,5 @@
 import { BillyResponse } from '../types';
 
-// Cache last working model (persists during session)
-let lastWorkingModel: string | null = null;
-
 // Predefined response patterns
 const responsePatterns: Record<string, BillyResponse> = {
   greeting: {
@@ -21,60 +18,6 @@ const responsePatterns: Record<string, BillyResponse> = {
     ]
   }
 };
-
-// Retry with exponential backoff
-async function fetchWithRetry(url: string, options: any, retries = 2) {
-  let lastError: any;
-
-  for (let i = 0; i <= retries; i++) {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
-
-    try {
-      const response = await fetch(url, {
-        ...options,
-        signal: controller.signal
-      });
-
-      clearTimeout(timeout);
-
-      if (!response.ok) {
-        let result: any = null;
-
-        try {
-          result = await response.json();
-        } catch {
-          throw new Error("Invalid JSON response");
-        }
-
-        const errorMessage = result?.error?.message || "Unknown error";
-
-        // Rate limit handling
-        if (errorMessage.toLowerCase().includes("rate limit")) {
-          throw new Error("RATE_LIMIT");
-        }
-
-        throw new Error(errorMessage);
-      }
-
-      return response;
-
-    } catch (err: any) {
-      clearTimeout(timeout);
-      lastError = err;
-
-      // stop retrying on rate limit (handle separately)
-      if (err.message === "RATE_LIMIT") {
-        throw err;
-      }
-
-      // exponential backoff
-      await new Promise(r => setTimeout(r, 500 * Math.pow(2, i)));
-    }
-  }
-
-  throw lastError;
-}
 
 export async function getBillyResponse(
   userMessage: string,
@@ -100,104 +43,40 @@ export async function getBillyResponse(
   }
 
   try {
-    const baseModels = [
-      "meta-llama/llama-3-8b-instruct",
-      "mistralai/mistral-7b-instruct",
-      "openai/gpt-3.5-turbo"
-    ];
+    // CALL YOUR BACKEND INSTEAD OF OPENROUTER
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: input,
+        history: chatHistory
+      })
+    });
 
-    // Prioritize last working model
-    const models = lastWorkingModel
-      ? [lastWorkingModel, ...baseModels.filter(m => m !== lastWorkingModel)]
-      : baseModels;
+    let result: any = null;
 
-    let data: any = null;
-    let success = false;
-    let lastError = "";
-
-    for (const model of models) {
-      try {
-        const response = await fetchWithRetry(
-          "https://openrouter.ai/api/v1/chat/completions",
-          {
-            method: "POST",
-            headers: {
-              "Authorization": `Bearer ${import.meta.env.VITE_OPENROUTER_API_KEY}`,
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              model,
-              messages: [
-                {
-                  role: "system",
-                  content: "You are Billy, an AI assistant specialized in cybersecurity and online safety. Provide accurate and factually correct explanations. Do not confuse cybersecurity concepts. If unsure, give a safe and general explanation. Use clear, simple language in short paragraphs. Avoid symbols, bullet points, or formatting. Always continue the conversation based on previous context."
-                },
-                ...chatHistory,
-                {
-                  role: "user",
-                  content: input
-                }
-              ]
-            })
-          }
-        );
-
-        let result: any = null;
-
-        try {
-          result = await response.json();
-        } catch {
-          throw new Error("Invalid JSON response from API");
-        }
-
-        data = result;
-        success = true;
-
-        // Cache successful model
-        lastWorkingModel = model;
-
-        console.log({
-          model,
-          status: "success",
-          timestamp: new Date().toISOString()
-        });
-
-        break;
-
-      } catch (err: any) {
-        lastError = err.message;
-
-        console.error({
-          model,
-          status: "failed",
-          error: lastError
-        });
-
-        // Rate limit handling (global stop)
-        if (lastError === "RATE_LIMIT") {
-          return {
-            message: "Too many requests right now. Please wait a moment and try again.",
-            suggestedActions: ['Retry'],
-            emotionalTone: 'informative'
-          };
-        }
-      }
+    try {
+      result = await response.json();
+    } catch {
+      throw new Error("Invalid JSON from server");
     }
 
-    if (!success) {
-      throw new Error(lastError || "All models failed");
+    if (!response.ok || !result?.success) {
+      throw new Error(result?.message || "Request failed");
     }
 
     let text =
-      data?.choices?.[0]?.message?.content?.trim() ||
+      result?.message?.trim() ||
       "I could not generate a response. Please try again.";
 
-    // Hard accuracy fix
+    // HARD ACCURACY FIX
     if (input.toLowerCase().includes("juice jacking")) {
       text = "Juice jacking is a cyberattack where a compromised USB charging station is used to steal data or install malware on a device. It is not related to SIM card swapping. To stay safe, avoid using public USB charging ports and use your own charger or a power bank.";
     }
 
-    // Clean formatting
+    //FORMATTING
     text = text
       .replace(/\*\*/g, '')
       .replace(/\*/g, '')
@@ -213,8 +92,9 @@ export async function getBillyResponse(
     };
 
   } catch (error: any) {
-    console.error("OpenRouter Fatal Error:", error);
+    console.error("Billy API Error:", error);
 
+    // SMART FALLBACK MESSAGE
     return {
       message: "I am having trouble connecting right now. Please try again in a moment.",
       suggestedActions: ['Retry'],
