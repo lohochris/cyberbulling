@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { 
   Building2, Wifi, CheckCircle, X, RotateCcw, 
   GraduationCap, ShieldCheck, Download, Lock, Globe, Users, Zap, 
@@ -43,7 +43,7 @@ const modules = [
     category: 'Foundations',
     icon: Building2,
     color: 'bg-orange-600',
-    externalLink: "https://www.anti-bullyingalliance.org.uk/",
+    externalLink: "https://www.unicef.org/stories/how-to-stop-cyberbullying",
     note: `The "Fist-to-Click" phenomenon represents the modern evolution of interpersonal conflict, where physical altercations have migrated into permanent digital archives. Unlike traditional schoolyard bullying, digital aggression is not bound by geography or time; it persists 24/7, reaching victims in the perceived safety of their own homes. This shift is exacerbated by the "Online Disinhibition Effect," a psychological state where individuals feel less restrained by social norms due to the lack of immediate physical feedback and eye contact. Consequently, conflicts escalate faster and leave behind a toxic "digital trail" that can impact the mental health of all parties involved for years. Understanding this dynamic is the first step in reclaiming digital civility and recognizing that every click has a human consequence behind it.`,
     quiz: [
       shuffleOptionsWithAnswer("What primary psychological effect drives faster escalation in digital conflict?", 
@@ -58,8 +58,8 @@ const modules = [
     category: 'Platform Dynamics',
     icon: Wifi,
     color: 'bg-blue-600',
-    externalLink: "https://www.cybersmile.org/",
-    note: `Born-digital aggression refers to hostility that has no offline predecessor; it is birthed entirely within the UI of social platforms. It is often fueled by "asynchronous communication"—the gap between sending a message and receiving a reaction. During this silence, intent is often misinterpreted. Modern platform architectures further complicate this by utilizing engagement metrics that inadvertently reward inflammatory content. When a "hateful" comment receives high engagement, algorithms may amplify it, creating a feedback loop where aggression becomes a tool for visibility. Users must learn to recognize these "dark patterns" in platform design that encourage tribalism. By slowing down our response times and practicing "digital pauses," we can disrupt the cycle of instant, born-digital hostility and foster more intentional, human-centric interactions online.`,
+    externalLink: "https://en.wikipedia.org/wiki/Online_disinhibition_effect",
+    note: `Born-digital aggression refers to hostility that has no offline predecessor; it is birthed entirely within the UI of social platforms. It is often fueled by "asynchronous communication", the gap between sending a message and receiving a reaction. During this silence, intent is often misinterpreted. Modern platform architectures further complicate this by utilizing engagement metrics that inadvertently reward inflammatory content. When a "hateful" comment receives high engagement, algorithms may amplify it, creating a feedback loop where aggression becomes a tool for visibility. Users must learn to recognize these "dark patterns" in platform design that encourage tribalism. By slowing down our response times and practicing "digital pauses," we can disrupt the cycle of instant, born-digital hostility and foster more intentional, human-centric interactions online.`,
     quiz: [
       shuffleOptionsWithAnswer("What is 'asynchronous communication' in this context?", 
         ["Talking on the phone", "The time delay between sending and receiving messages", "Instant face-to-face video calls", "Live streaming events"], 1),
@@ -73,8 +73,8 @@ const modules = [
     category: 'Tech Ethics',
     icon: Zap,
     color: 'bg-purple-600',
-    externalLink: "https://www.adalovelaceinstitute.org/",
-    note: `Algorithms are the invisible architects of our digital reality, but they are far from neutral. Designed to maximize user retention, they often curate "Echo Chambers"—digital environments where we are only exposed to information that validates our existing worldviews. This creates a dangerous "Confirmation Bias" loop. When we never encounter dissenting opinions, we begin to perceive the "other side" not just as different, but as an existential threat. This polarization is the breeding ground for radicalization and targeted harassment. Breaking out of an echo chamber requires "algorithmic literacy"—the conscious effort to seek out diverse sources, verify information via independent fact-checkers, and understand that our "Feed" is a curated reflection, not a total reality. We must take back control of our digital diet to maintain a balanced perspective of the world.`,
+    externalLink: "https://en.wikipedia.org/wiki/Echo_chamber_(media)",
+    note: `Algorithms are the invisible architects of our digital reality, but they are far from neutral. Designed to maximize user retention, they often curate "Echo Chambers", digital environments where we are only exposed to information that validates our existing worldviews. This creates a dangerous "Confirmation Bias" loop. When we never encounter dissenting opinions, we begin to perceive the "other side" not just as different, but as an existential threat. This polarization is the breeding ground for radicalization and targeted harassment. Breaking out of an echo chamber requires "algorithmic literacy", the conscious effort to seek out diverse sources, verify information via independent fact-checkers, and understand that our "Feed" is a curated reflection, not a total reality. We must take back control of our digital diet to maintain a balanced perspective of the world.`,
     quiz: [
       shuffleOptionsWithAnswer("What is the primary danger of a digital 'Echo Chamber'?", 
         ["It makes the internet faster", "It reinforces biases and increases polarization", "It helps you find new hobbies", "It improves search accuracy"], 1),
@@ -88,8 +88,8 @@ const modules = [
     category: 'Security',
     icon: Lock,
     color: 'bg-red-600',
-    externalLink: "https://www.getsafeonline.org/",
-    note: `Doxing—the malicious publication of private identifiable information (PII)—is one of the most severe forms of digital violence. By exposing home addresses, private phone numbers, or family details, aggressors move digital conflict into the physical world, often resulting in real-world intimidation or "swatting." Protecting oneself requires rigorous "data hygiene." This includes using secondary email addresses for public forums, disabling geotagging on social media photos, and regularly auditing what "Search Engines" know about you. In the UK, while there isn't a single "Doxing Law," such actions are often prosecuted under the Protection from Harassment Act 1997 or the Malicious Communications Act. Digital safety is a proactive discipline; we must treat our personal data as a high-value asset that requires constant monitoring and protection from those who seek to weaponize it.`,
+    externalLink: "https://en.wikipedia.org/wiki/Doxing",
+    note: `Doxing is the malicious publication of private identifiable information (PII), one of the most severe forms of digital violence. By exposing home addresses, private phone numbers, or family details, aggressors move digital conflict into the physical world, often resulting in real-world intimidation or "swatting." Protecting oneself requires rigorous "data hygiene." This includes using secondary email addresses for public forums, disabling geotagging on social media photos, and regularly auditing what "Search Engines" know about you. In the UK, while there isn't a single "Doxing Law," such actions are often prosecuted under the Protection from Harassment Act 1997 or the Malicious Communications Act. Digital safety is a proactive discipline; we must treat our personal data as a high-value asset that requires constant monitoring and protection from those who seek to weaponize it.`,
     quiz: [
       shuffleOptionsWithAnswer("Which practice is key to maintaining good 'Data Hygiene'?", 
         ["Using your birthday as a password", "Minimizing PII shared on public forums", "Posting your location in real-time", "Using the same password everywhere"], 1),
@@ -103,7 +103,7 @@ const modules = [
     category: 'Psychology',
     icon: MessageSquare,
     color: 'bg-emerald-600',
-    externalLink: "https://www.psychologytoday.com/",
+    externalLink: "https://www.sciencedirect.com/science/article/abs/pii/S0191886914000324",
     note: `Psychological profiling of habitual internet "trolls" has revealed a consistent link to the "Dark Tetrad" of personality traits: Machiavellianism, Narcissism, Psychopathy, and Sadism. Trolls typically seek "negative social potency," which is the psychological gratification derived from causing distress to others. Unlike a debater who seeks to be right, a troll seeks to be disruptive. Recognizing this is a powerful defense mechanism. When we realize that a troll's behavior is a manifestation of their own psychological deficiencies rather than a valid critique of our worth, we gain the emotional distance needed to "not feed the troll." Resilience in digital spaces comes from understanding that some actors are not looking for logic; they are looking for a reaction. Denying them that reaction is the most effective way to neutralize their influence.`,
     quiz: [
       shuffleOptionsWithAnswer("What is 'negative social potency'?", 
@@ -118,7 +118,7 @@ const modules = [
     category: 'Cybersecurity',
     icon: Users,
     color: 'bg-indigo-600',
-    externalLink: "https://www.ncsc.gov.uk/",
+    externalLink: "https://en.wikipedia.org/wiki/Social_engineering_(security)",
     note: `Social engineering is a manipulative technique that exploits human psychology rather than technical software flaws. It is the "human hack." Phishing, the most common variant, involves sending deceptive messages designed to trick victims into revealing sensitive information or installing malware. These attacks often leverage "Urgency," "Authority," or "Fear" to bypass our logical thinking. For example, an email claiming your bank account is "compromised" triggers a panic response that makes you more likely to click a malicious link without thinking. To defend against these tactics, we must adopt a "Zero Trust" mindset. Always verify the source through independent channels (like calling the company directly) and never click on links from unsolicited emails. Cyber defense is 10% technology and 90% human awareness.`,
     quiz: [
       shuffleOptionsWithAnswer("What is the core focus of 'Social Engineering'?", 
@@ -133,8 +133,8 @@ const modules = [
     category: 'Privacy',
     icon: Fingerprint,
     color: 'bg-cyan-600',
-    externalLink: "https://www.internetsociety.org/",
-    note: `Your digital footprint consists of two parts: active and passive. While you control your "active" footprint (posts and comments), your "passive" footprint—metadata—is often generated without your direct input. Every digital photo you take contains EXIF data, which can include the exact GPS coordinates, date, time, and camera model used. When shared, this metadata can reveal your daily routines, home location, and travel habits to predators or data brokers. Similarly, your browsing history and "cookies" create a granular profile of your interests and vulnerabilities. Managing this requires "Privacy by Design." We must use metadata stripping tools before posting photos, utilize "Incognito" modes for sensitive searches, and regularly clear our digital trails. In an age of total surveillance, anonymity is not a default setting; it is a skill that must be practiced.`,
+    externalLink: "https://en.wikipedia.org/wiki/Digital_footprint",
+    note: `Your digital footprint consists of two parts: active and passive. While you control your "active" footprint (posts and comments), your "passive" footprint metadata is often generated without your direct input. Every digital photo you take contains EXIF data, which can include the exact GPS coordinates, date, time, and camera model used. When shared, this metadata can reveal your daily routines, home location, and travel habits to predators or data brokers. Similarly, your browsing history and "cookies" create a granular profile of your interests and vulnerabilities. Managing this requires "Privacy by Design." We must use metadata stripping tools before posting photos, utilize "Incognito" modes for sensitive searches, and regularly clear our digital trails. In an age of total surveillance, anonymity is not a default setting; it is a skill that must be practiced.`,
     quiz: [
       shuffleOptionsWithAnswer("What is 'EXIF data' in a digital photograph?", 
         ["A filter used for beauty", "Metadata containing GPS and camera info", "The name of the photographer", "The photo resolution"], 1),
@@ -148,8 +148,8 @@ const modules = [
     category: 'Sociology',
     icon: Globe,
     color: 'bg-pink-600',
-    externalLink: "https://www.gov.uk/government/publications/digital-charter",
-    note: `As our lives move deeper into the "metaverse," the ethical imperative of "Digital Empathy" becomes critical. The "Screen Buffer" often prevents us from seeing the physiological impact of our words—the flinch, the tear, or the spike in heart rate. This lack of feedback can turn normally kind people into "accidental aggressors." Digital ethics is the practice of applying the same moral standards to online interactions as we do to face-to-face ones. It involves "Cognitive Empathy"—the ability to imagine the mental state of another person behind a profile picture. Practicing digital ethics means pausing before posting, considering how a joke might be interpreted by a different culture, and actively standing up for others who are being targeted. We are the architects of the digital culture our children will inherit; we must build it with kindness and accountability.`,
+    externalLink: "https://en.wikipedia.org/wiki/Cyberethics",
+    note: `As our lives move deeper into the "metaverse," the ethical imperative of "Digital Empathy" becomes critical. The "Screen Buffer" often prevents us from seeing the physiological impact of our words—the flinch, the tear, or the spike in heart rate. This lack of feedback can turn normally kind people into "accidental aggressors." Digital ethics is the practice of applying the same moral standards to online interactions as we do to face-to-face ones. It involves "Cognitive Empathy", the ability to imagine the mental state of another person behind a profile picture. Practicing digital ethics means pausing before posting, considering how a joke might be interpreted by a different culture, and actively standing up for others who are being targeted. We are the architects of the digital culture our children will inherit; we must build it with kindness and accountability.`,
     quiz: [
       shuffleOptionsWithAnswer("What is 'Digital Empathy'?", 
         ["A new software update", "Applying moral standards to online interactions", "Ignoring online comments", "Using emojis in messages"], 1),
@@ -163,8 +163,8 @@ const modules = [
     category: 'Law',
     icon: ShieldAlert,
     color: 'bg-rose-600',
-    externalLink: "https://www.stalkinghelpline.org/",
-    note: `Cyberstalking is a criminal pattern of behavior that uses technology to systematically harass, monitor, or intimidate a victim. This can range from "Geostalking" (using shared location data) to "Identity Assumption" (creating fake profiles to infiltrate a victim's circle). Unlike a one-off argument, cyberstalking is characterized by persistence and the intent to cause fear. In the UK, stalking is a specific criminal offense under the Malicious Communications Act and the Harassment Act. Victims are encouraged to "Keep the Logs"—never delete messages, as they form the evidentiary chain required for police intervention. Protection involves locking down social media "tagging" permissions and being extremely selective about who has access to your real-time location. Safety is found in obscurity and the rigorous control of your digital perimeter.`,
+    externalLink: "https://en.wikipedia.org/wiki/Cyberstalking",
+    note: `Cyberstalking is a criminal pattern of behavior that uses technology to systematically harass, monitor, or intimidate a victim. This can range from "Geostalking" (using shared location data) to "Identity Assumption" (creating fake profiles to infiltrate a victim's circle). Unlike a one-off argument, cyberstalking is characterized by persistence and the intent to cause fear. In the UK, stalking is a specific criminal offense under the Malicious Communications Act and the Harassment Act. Victims are encouraged to "Keep the Logs" never delete messages, as they form the evidentiary chain required for police intervention. Protection involves locking down social media "tagging" permissions and being extremely selective about who has access to your real-time location. Safety is found in obscurity and the rigorous control of your digital perimeter.`,
     quiz: [
       shuffleOptionsWithAnswer("What defines cyberstalking compared to a simple argument?", 
         ["It is only online", "It is a persistent pattern intended to cause fear", "It involves more than three people", "It requires technical expertise"], 1),
@@ -178,8 +178,8 @@ const modules = [
     category: 'Strategy',
     icon: AlertTriangle,
     color: 'bg-yellow-600',
-    externalLink: "https://www.report-it.org.uk/",
-    note: `When a digital crisis erupts—whether it's a hacking attempt, a viral smear campaign, or severe harassment—the first 60 minutes are critical. The core strategy is: **Collect, Block, Report, and Disconnect.** First, "Collect" evidence through screenshots that include timestamps and URLs. Second, "Block" the aggressor to prevent further escalation. Third, "Report" to the platform's safety team and, if the threat is physical, to local authorities. Finally, "Disconnect"—stepping away from the screen prevents the "doom-scrolling" that damages mental health. Do not attempt to "clear your name" in the middle of a pile-on; silence is often the most powerful de-escalation tool. By following a structured response plan, you move from a state of victimhood to a state of controlled management.`,
+    externalLink: "https://www.ncsc.gov.uk/section/advice-guidance/you-your-family",
+    note: `When a digital crisis erupts, whether it's a hacking attempt, a viral smear campaign, or severe harassment, the first 60 minutes are critical. The core strategy is: Collect, Block, Report, and Disconnect. First, "Collect" evidence through screenshots that include timestamps and URLs. Second, "Block" the aggressor to prevent further escalation. Third, "Report" to the platform's safety team and, if the threat is physical, to local authorities. Finally, "Disconnect", stepping away from the screen prevents the "doom-scrolling" that damages mental health. Do not attempt to "clear your name" in the middle of a pile-on; silence is often the most powerful de-escalation tool. By following a structured response plan, you move from a state of victimhood to a state of controlled management.`,
     quiz: [
       shuffleOptionsWithAnswer("What are the four pillars of digital crisis mitigation?", 
         ["Argue, Delete, Hide, Wait", "Collect, Block, Report, Disconnect", "Post, Share, Comment, Like", "Screen, Save, Send, Share"], 1),
@@ -193,8 +193,8 @@ const modules = [
     category: 'Emerging Tech',
     icon: Eye,
     color: 'bg-teal-600',
-    externalLink: "https://www.fullfact.org/",
-    note: `Synthetic media, popularly known as "Deepfakes," uses AI to create hyper-realistic images, videos, and audio of people saying or doing things they never did. This technology poses a massive threat to digital ethics, as it can be used for non-consensual imagery or political disinformation. Detecting deepfakes requires "Lateral Reading"—checking multiple sources to see if a sensational event is reported elsewhere. We must also look for "digital artifacts" like unnatural blinking patterns, inconsistent lighting, or distorted audio. As AI becomes more sophisticated, we can no longer rely on "seeing is believing." We must move toward a model of "authenticated truth," where we only trust media from verified, reputable sources. Ethical digital citizenship in the AI age means being a critical consumer of every piece of media we encounter.`,
+    externalLink: "https://fullfact.org/blog/2023/dec/how-to-spot-deepfakes/",
+    note: `Synthetic media, popularly known as "Deepfakes," uses AI to create hyper-realistic images, videos, and audio of people saying or doing things they never did. This technology poses a massive threat to digital ethics, as it can be used for non-consensual imagery or political disinformation. Detecting deepfakes requires "Lateral Reading", checking multiple sources to see if a sensational event is reported elsewhere. We must also look for "digital artifacts" like unnatural blinking patterns, inconsistent lighting, or distorted audio. As AI becomes more sophisticated, we can no longer rely on "seeing is believing." We must move toward a model of "authenticated truth," where we only trust media from verified, reputable sources. Ethical digital citizenship in the AI age means being a critical consumer of every piece of media we encounter.`,
     quiz: [
       shuffleOptionsWithAnswer("What is a 'Deepfake'?", 
         ["A high-quality movie", "AI-generated synthetic media that mimics real people", "A fake social media account", "A type of video filter"], 1),
@@ -390,9 +390,10 @@ export default function Awareness() {
     setIsFinalExam(false);
   };
 
-  const handleViewReports = () => {
-    navigate('/report');
-  };
+
+const handleViewReports = () => {
+  navigate("/report");
+};
 
   return (
     <div className="min-h-screen py-12 bg-slate-50">
@@ -407,13 +408,13 @@ export default function Awareness() {
             <p className="text-slate-500 font-medium">12-Module Certification Path</p>
           </div>
           <div className="flex gap-4">
-            <Button 
-              variant="outline" 
-              className="transition-all duration-300 transform active:scale-95 font-bold border-2 shadow-sm cursor-pointer bg-white hover:bg-blue-600 hover:text-white hover:border-blue-600 hover:scale-105 hover:shadow-xl hover:-translate-y-1 px-6" 
-              onClick={handleViewReports}
-            >
-              <Download size={16} className="mr-2" /> View Reports
-            </Button>
+            <Button
+  variant="outline"
+  className="transition-all duration-300 transform active:scale-95 font-bold border-2 shadow-sm cursor-pointer bg-white hover:bg-blue-600 hover:text-white hover:border-blue-600 hover:scale-105 hover:shadow-xl hover:-translate-y-1 px-6"
+  onClick={() => navigate("/report")}
+>
+  Report
+</Button>
             <Button 
               variant="ghost" 
               className="hover:bg-red-100 hover:text-red-600 transition-all duration-300 hover:scale-105" 
