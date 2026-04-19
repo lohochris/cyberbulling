@@ -278,16 +278,22 @@ export default function Awareness() {
   }, []);
 
   // INITIALIZE RANDOM EXAM QUESTIONS WHEN FINAL EXAM STARTS
-  const startFinalExam = () => {
-    const allQuestions = getAllExamQuestions();
-    const randomQuestions = getRandomExamQuestions(allQuestions, 24);
-    setExamQuestions(randomQuestions);
-    setCurrentExamQuestionIndex(0);
-    setExamAnswers({});
-    setExamSubmitted(false);
-    setShowCertificate(false);
-    setIsFinalExam(true);
-  };
+const startFinalExam = () => {
+  const allQuestions = getAllExamQuestions();
+  const randomQuestions = getRandomExamQuestions(allQuestions, 24);
+  setExamQuestions(randomQuestions);
+  setCurrentExamQuestionIndex(0);
+  setExamAnswers({});
+  setExamSubmitted(false);
+  setShowCertificate(false);
+  setIsFinalExam(true);
+  
+  // Scroll to top when exam starts
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+};
 
   const downloadCertificate = async () => {
     if (!userName) {
