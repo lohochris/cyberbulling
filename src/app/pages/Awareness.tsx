@@ -401,6 +401,11 @@ export default function Awareness() {
     navigate("/report");
   };
 
+  // Handle module quiz answer (improved for mobile)
+  const handleModuleAnswer = (questionIndex, answerIndex) => {
+    setAnswers({...answers, [questionIndex]: answerIndex});
+  };
+
   return (
     <div className="min-h-screen py-6 sm:py-12 bg-slate-50">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6">
@@ -648,88 +653,150 @@ export default function Awareness() {
           </div>
         )}
 
-        {/* FINAL EXAM TRIGGER - Mobile Responsive */}
+        {/* FINAL EXAM TRIGGER - FIXED: Button stays within card on mobile */}
         {shieldProgress.modulesCompleted.length === 12 && !isFinalExam && !showCertificate && (
-          <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="mt-8 sm:mt-16 text-center bg-slate-900 p-6 sm:p-8 md:p-12 rounded-2xl sm:rounded-3xl text-white shadow-2xl">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black mb-3 sm:mb-4">Certification Exam Ready</h2>
-            <p className="text-sm sm:text-base text-slate-400 mb-6 sm:mb-8 max-w-xl mx-auto px-2">
-              You have completed all 12 modules! The final exam consists of 24 randomly selected questions covering all modules. 
-              You need 70% to pass and earn your certificate.
-            </p>
-            <Button 
-              className="bg-blue-600 px-8 sm:px-12 py-4 sm:py-8 text-lg sm:text-2xl font-black rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-105 hover:bg-blue-700 w-full sm:w-auto" 
-              onClick={startFinalExam}
-            >
-              BEGIN FINAL EXAM
-            </Button>
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0 }} 
+            animate={{ scale: 1, opacity: 1 }} 
+            className="mt-8 sm:mt-16"
+          >
+            <div className="bg-slate-900 p-6 sm:p-8 md:p-12 rounded-2xl sm:rounded-3xl text-white shadow-2xl">
+              <div className="text-center">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-black mb-3 sm:mb-4">Certification Exam Ready</h2>
+                <p className="text-sm sm:text-base text-slate-400 mb-6 sm:mb-8 max-w-xl mx-auto px-2">
+                  You have completed all 12 modules! The final exam consists of 24 randomly selected questions covering all modules. 
+                  You need 70% to pass and earn your certificate.
+                </p>
+                <Button 
+                  className="bg-blue-600 px-6 sm:px-8 md:px-12 py-3 sm:py-4 md:py-8 text-base sm:text-lg md:text-2xl font-black rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-105 hover:bg-blue-700 w-full sm:w-auto min-w-[200px]" 
+                  onClick={startFinalExam}
+                >
+                  BEGIN FINAL EXAM
+                </Button>
+              </div>
+            </div>
           </motion.div>
         )}
 
-        {/* STUDY MODAL - Mobile Responsive */}
+        {/* STUDY MODAL - IMPROVED for mobile with better quiz layout */}
         <AnimatePresence>
           {activeModule && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 bg-slate-900/95 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4">
               <div className="bg-white rounded-2xl sm:rounded-3xl w-full max-w-4xl max-h-[95vh] sm:max-h-[90vh] overflow-hidden flex flex-col border-[5px] sm:border-[10px] border-white">
-                <div className="p-4 sm:p-6 border-b flex justify-between items-center">
+                <div className="p-4 sm:p-6 border-b flex justify-between items-center flex-shrink-0">
                   <h3 className="font-black text-lg sm:text-xl text-slate-800">{activeModule.title}</h3>
-                  <Button variant="ghost" className="rounded-full hover:bg-slate-100 transition-all duration-300 hover:scale-105 p-2" onClick={() => {setActiveModule(null); setModuleQuizIndex(0); setAnswers({});}}><X size={isMobile ? 20 : 24} /></Button>
+                  <Button variant="ghost" className="rounded-full hover:bg-slate-100 transition-all duration-300 hover:scale-105 p-2" onClick={() => {setActiveModule(null); setModuleQuizIndex(0); setAnswers({});}}>
+                    <X size={isMobile ? 20 : 24} />
+                  </Button>
                 </div>
 
-                <div className="p-4 sm:p-6 md:p-8 lg:p-10 overflow-y-auto flex-1">
+                <div className="flex-1 overflow-y-auto">
                   {moduleQuizIndex === 0 ? (
-                    <div className="max-w-2xl mx-auto">
-                      <p className="text-base sm:text-lg leading-relaxed text-slate-700 font-serif text-justify" style={{ textAlignLast: 'left' }}>
-                        <span className="text-3xl sm:text-5xl font-black mr-1 sm:mr-2 float-left text-blue-600 leading-none">{activeModule.note.charAt(0)}</span>
-                        {activeModule.note.slice(1)}
-                      </p>
-                      <a href={activeModule.externalLink} target="_blank" rel="noreferrer" className="mt-4 sm:mt-8 inline-flex items-center gap-2 text-blue-600 font-bold hover:underline transition-all duration-300 hover:scale-105 text-sm sm:text-base">
-                        <ExternalLink size={isMobile ? 14 : 18} /> Explore More Resources
-                      </a>
+                    <div className="p-4 sm:p-6 md:p-8 lg:p-10">
+                      <div className="max-w-2xl mx-auto">
+                        <p className="text-base sm:text-lg leading-relaxed text-slate-700 font-serif text-justify">
+                          <span className="text-3xl sm:text-5xl font-black mr-1 sm:mr-2 float-left text-blue-600 leading-none">{activeModule.note.charAt(0)}</span>
+                          {activeModule.note.slice(1)}
+                        </p>
+                        <a href={activeModule.externalLink} target="_blank" rel="noreferrer" className="mt-4 sm:mt-8 inline-flex items-center gap-2 text-blue-600 font-bold hover:underline transition-all duration-300 hover:scale-105 text-sm sm:text-base">
+                          <ExternalLink size={isMobile ? 14 : 18} /> Explore More Resources
+                        </a>
+                      </div>
                     </div>
                   ) : (
-                    <div className="max-w-xl mx-auto space-y-6 sm:space-y-8">
-                      <div className="text-center">
-                        <Badge className="mb-3 sm:mb-4 bg-blue-100 text-blue-600 border-none text-xs sm:text-sm">Question {moduleQuizIndex} of 2</Badge>
-                        <h2 className="text-base sm:text-lg md:text-xl font-bold mb-4 sm:mb-6">{activeModule.quiz[moduleQuizIndex-1].question}</h2>
-                      </div>
-                      <div className="grid gap-2 sm:gap-3">
-                        {activeModule.quiz[moduleQuizIndex-1].options.map((opt, i) => (
+                    // IMPROVED MODULE QUIZ LAYOUT - Same as final exam style
+                    <div className="p-4 sm:p-6 md:p-8 lg:p-10">
+                      <div className="max-w-2xl mx-auto space-y-6 sm:space-y-8">
+                        {/* Progress indicator for module quiz */}
+                        <div className="mb-4">
+                          <div className="flex justify-between text-xs sm:text-sm text-slate-500 mb-2">
+                            <span>Question {moduleQuizIndex} of 2</span>
+                            <span>{answers[moduleQuizIndex] !== undefined ? 'Answered' : 'Not answered'}</span>
+                          </div>
+                          <div className="h-1.5 sm:h-2 bg-slate-100 rounded-full overflow-hidden">
+                            <div 
+                              className="h-full bg-blue-600 transition-all duration-300"
+                              style={{ width: `${(moduleQuizIndex / 2) * 100}%` }}
+                            />
+                          </div>
+                        </div>
+
+                        {/* Question */}
+                        <div>
+                          <Badge className="mb-3 sm:mb-4 bg-blue-100 text-blue-600 border-none px-3 sm:px-4 py-1 text-xs sm:text-sm">
+                            Module Quiz • {activeModule.category}
+                          </Badge>
+                          <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-800 leading-relaxed">
+                            {activeModule.quiz[moduleQuizIndex - 1].question}
+                          </h2>
+                        </div>
+
+                        {/* Options - Same styling as final exam */}
+                        <div className="grid gap-3 sm:gap-4">
+                          {activeModule.quiz[moduleQuizIndex - 1].options.map((opt, i) => (
+                            <button
+                              key={i}
+                              onClick={() => handleModuleAnswer(moduleQuizIndex, i)}
+                              className={`p-4 sm:p-6 text-left rounded-xl sm:rounded-2xl border-2 transition-all duration-300 font-medium cursor-pointer hover:scale-[1.01] sm:hover:scale-[1.02] text-sm sm:text-base
+                                ${answers[moduleQuizIndex] === i 
+                                  ? 'border-blue-600 bg-blue-50 text-blue-700' 
+                                  : 'border-slate-200 hover:border-blue-400 hover:bg-slate-50'
+                                }`}
+                            >
+                              <span className="inline-block w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-slate-100 text-center leading-6 sm:leading-8 mr-2 sm:mr-4 font-bold text-xs sm:text-sm">
+                                {String.fromCharCode(65 + i)}
+                              </span>
+                              <span className="text-sm sm:text-base">{opt}</span>
+                            </button>
+                          ))}
+                        </div>
+
+                        {/* Navigation Buttons */}
+                        <div className="flex flex-col sm:flex-row justify-between gap-3 pt-6 sm:pt-8">
                           <Button 
-                            key={i} 
                             variant="outline" 
-                            className={`py-5 sm:py-8 text-sm sm:text-md border-2 rounded-xl sm:rounded-2xl transition-all duration-300 cursor-pointer hover:scale-[1.01] whitespace-normal break-words h-auto ${answers[moduleQuizIndex] === i ? 'border-blue-600 bg-blue-50' : 'border-slate-100 hover:border-blue-400'}`} 
-                            onClick={() => setAnswers({...answers, [moduleQuizIndex]: i})}
+                            onClick={() => setModuleQuizIndex(0)} 
+                            className="px-4 sm:px-6 py-2 sm:py-3 transition-all duration-300 hover:scale-105 hover:bg-blue-600 hover:text-white hover:border-blue-600 text-sm sm:text-base order-2 sm:order-1"
                           >
-                            <span className="inline-block w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-slate-200 text-center leading-5 sm:leading-6 mr-2 sm:mr-3 text-[10px] sm:text-xs font-bold flex-shrink-0">
-                              {String.fromCharCode(65 + i)}
-                            </span>
-                            <span className="text-left text-xs sm:text-sm">{opt}</span>
+                            <ChevronLeft className="mr-1 sm:mr-2" size={isMobile ? 16 : 18} /> Review Note
                           </Button>
-                        ))}
-                      </div>
-                      <div className="flex flex-col sm:flex-row justify-between gap-3 mt-6 sm:mt-10">
-                        <Button variant="link" onClick={() => setModuleQuizIndex(0)} className="text-slate-400 transition-all duration-300 hover:scale-105 text-sm sm:text-base"><ChevronLeft className="mr-1" size={isMobile ? 14 : 16}/> Review Note</Button>
-                        <Button className="transition-all duration-300 transform active:scale-95 font-bold border-2 shadow-sm cursor-pointer hover:scale-105 hover:shadow-xl hover:-translate-y-1 hover:bg-blue-700 hover:text-white hover:border-blue-700 bg-slate-900 text-white px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base" 
-                               onClick={() => {
-                                 if (answers[moduleQuizIndex] === undefined) return alert("Please select an answer before continuing");
-                                 if (moduleQuizIndex < 2) setModuleQuizIndex(moduleQuizIndex + 1);
-                                 else { completeModule(activeModule.id); setActiveModule(null); setModuleQuizIndex(0); setAnswers({}); }
-                               }}>
-                               {moduleQuizIndex === 2 ? 'Complete Module' : 'Next'} <ChevronRight size={isMobile ? 14 : 18}/>
-                        </Button>
+                          
+                          <Button 
+                            className={`bg-blue-600 text-white px-6 sm:px-8 py-2 sm:py-3 transition-all duration-300 hover:scale-105 hover:bg-blue-700 text-sm sm:text-base order-1 sm:order-2 ${answers[moduleQuizIndex] === undefined ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            onClick={() => {
+                              if (answers[moduleQuizIndex] === undefined) {
+                                alert("Please select an answer before continuing");
+                                return;
+                              }
+                              if (moduleQuizIndex < 2) {
+                                setModuleQuizIndex(moduleQuizIndex + 1);
+                              } else {
+                                completeModule(activeModule.id);
+                                setActiveModule(null);
+                                setModuleQuizIndex(0);
+                                setAnswers({});
+                              }
+                            }}
+                          >
+                            {moduleQuizIndex === 2 ? 'Complete Module' : 'Next Question'} 
+                            <ChevronRight className="ml-1 sm:ml-2" size={isMobile ? 16 : 18} />
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   )}
                 </div>
 
                 {moduleQuizIndex === 0 && (
-                  <div className="p-4 sm:p-8 border-t bg-slate-50 flex justify-center">
-                    <Button 
-                      className="bg-blue-600 text-white px-8 sm:px-12 py-4 sm:py-6 text-base sm:text-lg rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-105 hover:bg-blue-700 w-full sm:w-auto" 
-                      onClick={() => setModuleQuizIndex(1)}
-                    >
-                      Start Assessment
-                    </Button>
+                  <div className="p-4 sm:p-8 border-t bg-slate-50 flex-shrink-0">
+                    <div className="flex justify-center">
+                      <Button 
+                        className="bg-blue-600 text-white px-8 sm:px-12 py-4 sm:py-6 text-base sm:text-lg rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-105 hover:bg-blue-700 w-full sm:w-auto" 
+                        onClick={() => setModuleQuizIndex(1)}
+                      >
+                        Start Assessment (2 Questions)
+                      </Button>
+                    </div>
                   </div>
                 )}
               </div>
@@ -772,7 +839,7 @@ export default function Awareness() {
               </div>
             </motion.div>
 
-            {/* CERTIFICATE AREA - Mobile Optimized */}
+            {/* CERTIFICATE AREA */}
             <div style={{ position: 'fixed', left: '-9999px', top: '-9999px', visibility: 'hidden', zIndex: -1 }}>
               <div 
                 ref={certificateRef} 
