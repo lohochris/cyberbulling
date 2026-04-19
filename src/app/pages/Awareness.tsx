@@ -668,7 +668,7 @@ export default function Awareness() {
                   You need 70% to pass and earn your certificate.
                 </p>
                 <Button 
-                  className="bg-blue-600 px-6 sm:px-8 md:px-12 py-3 sm:py-4 md:py-8 text-base sm:text-lg md:text-2xl font-black rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-105 hover:bg-blue-700 w-full sm:w-auto min-w-[200px]" 
+                  className="bg-blue-600 px-6 sm:px-8 md:px-12 py-3 sm:py-4 md:py-8 text-base sm:text-lg md:text-1xl font-black rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-105 hover:bg-blue-700 w-full sm:w-auto min-w-[100px]" 
                   onClick={startFinalExam}
                 >
                   BEGIN FINAL EXAM
@@ -794,7 +794,7 @@ export default function Awareness() {
                         className="bg-blue-600 text-white px-8 sm:px-12 py-4 sm:py-6 text-base sm:text-lg rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-105 hover:bg-blue-700 w-full sm:w-auto" 
                         onClick={() => setModuleQuizIndex(1)}
                       >
-                        Start Assessment (2 Questions)
+                        Knowledge Check
                       </Button>
                     </div>
                   </div>
