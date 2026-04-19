@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router';
 import { 
@@ -265,6 +265,17 @@ export default function Awareness() {
   const [showCertificate, setShowCertificate] = useState(false);
   const [answers, setAnswers] = useState({});
   const [isDownloading, setIsDownloading] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // INITIALIZE RANDOM EXAM QUESTIONS WHEN FINAL EXAM STARTS
   const startFinalExam = () => {
@@ -277,10 +288,6 @@ export default function Awareness() {
     setShowCertificate(false);
     setIsFinalExam(true);
   };
-
-  // STYLES - All buttons have hover effects
-  const btnBase = "transition-all duration-300 transform active:scale-95 font-bold border-2 shadow-sm cursor-pointer";
-  const btnHover = "hover:scale-105 hover:shadow-xl hover:-translate-y-1 hover:bg-blue-700 hover:text-white hover:border-blue-700";
 
   const downloadCertificate = async () => {
     if (!userName) {
@@ -390,48 +397,48 @@ export default function Awareness() {
     setIsFinalExam(false);
   };
 
-
-const handleViewReports = () => {
-  navigate("/report");
-};
+  const handleViewReports = () => {
+    navigate("/report");
+  };
 
   return (
-    <div className="min-h-screen py-12 bg-slate-50">
-      <div className="max-w-7xl mx-auto px-4">
+    <div className="min-h-screen py-6 sm:py-12 bg-slate-50">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6">
         
-        {/* HEADER */}
-        <div className="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
+        {/* HEADER - Mobile Responsive */}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6 sm:mb-10 gap-4 sm:gap-6">
           <div className="text-center md:text-left">
-            <h1 className="text-4xl font-black text-slate-900 flex items-center gap-3">
-              <GraduationCap className="text-blue-600" size={44} /> Awareness Hub
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 flex items-center gap-2 sm:gap-3 justify-center md:justify-start">
+              <GraduationCap className="text-blue-600" size={isMobile ? 32 : 44} /> 
+              <span className="text-xl sm:text-2xl md:text-4xl">Awareness Hub</span>
             </h1>
-            <p className="text-slate-500 font-medium">12-Module Certification Path</p>
+            <p className="text-xs sm:text-sm text-slate-500 font-medium mt-1">12-Module Certification Path</p>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-2 sm:gap-4">
             <Button
-  variant="outline"
-  className="transition-all duration-300 transform active:scale-95 font-bold border-2 shadow-sm cursor-pointer bg-white hover:bg-blue-600 hover:text-white hover:border-blue-600 hover:scale-105 hover:shadow-xl hover:-translate-y-1 px-6"
-  onClick={() => navigate("/report")}
->
-  Report
-</Button>
+              variant="outline"
+              className="transition-all duration-300 transform active:scale-95 font-bold border-2 shadow-sm cursor-pointer bg-white hover:bg-blue-600 hover:text-white hover:border-blue-600 hover:scale-105 hover:shadow-xl hover:-translate-y-1 px-4 sm:px-6 text-sm sm:text-base"
+              onClick={() => navigate("/report")}
+            >
+              Report
+            </Button>
             <Button 
               variant="ghost" 
               className="hover:bg-red-100 hover:text-red-600 transition-all duration-300 hover:scale-105" 
               onClick={resetProgress}
             >
-              <RotateCcw size={18} />
+              <RotateCcw size={isMobile ? 16 : 18} />
             </Button>
           </div>
         </div>
 
-        {/* PROGRESS BAR */}
-        <div className="mb-12 bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-          <div className="flex justify-between mb-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+        {/* PROGRESS BAR - Mobile Responsive */}
+        <div className="mb-6 sm:mb-12 bg-white p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-100 shadow-sm">
+          <div className="flex justify-between mb-2 text-[8px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest">
             <span>Progress</span>
             <span>{shieldProgress.modulesCompleted.length} / 12</span>
           </div>
-          <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden">
+          <div className="h-2 sm:h-3 w-full bg-slate-100 rounded-full overflow-hidden">
             <motion.div 
               animate={{ width: `${(shieldProgress.modulesCompleted.length / 12) * 100}%` }}
               className="h-full bg-blue-600"
@@ -439,34 +446,34 @@ const handleViewReports = () => {
           </div>
         </div>
 
-        {/* FINAL EXAM COMPONENT */}
+        {/* FINAL EXAM COMPONENT - Mobile Responsive */}
         {isFinalExam && !showCertificate && (
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-3xl shadow-2xl overflow-hidden"
+            className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden"
           >
-            <div className="bg-slate-900 p-8 text-white">
-              <div className="flex justify-between items-center">
+            <div className="bg-slate-900 p-4 sm:p-6 md:p-8 text-white">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
                 <div>
-                  <h2 className="text-3xl font-black mb-2">Final Certification Exam</h2>
-                  <p className="text-slate-400">24 Questions • 70% to Pass • Randomly Selected from All Modules</p>
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-black mb-1 sm:mb-2">Final Certification Exam</h2>
+                  <p className="text-xs sm:text-sm text-slate-400">24 Questions • 70% to Pass • Randomly Selected from All Modules</p>
                 </div>
-                <Button variant="ghost" className="text-white hover:bg-slate-800 transition-all duration-300 hover:scale-105" onClick={resetAndExitExam}>
-                  <X size={24} />
+                <Button variant="ghost" className="text-white hover:bg-slate-800 transition-all duration-300 hover:scale-105 p-2" onClick={resetAndExitExam}>
+                  <X size={isMobile ? 20 : 24} />
                 </Button>
               </div>
             </div>
 
             {!examSubmitted ? (
               <>
-                <div className="p-8 md:p-12">
-                  <div className="mb-8">
-                    <div className="flex justify-between text-sm text-slate-500 mb-2">
+                <div className="p-4 sm:p-6 md:p-8 lg:p-12">
+                  <div className="mb-6 sm:mb-8">
+                    <div className="flex justify-between text-xs sm:text-sm text-slate-500 mb-2">
                       <span>Question {currentExamQuestionIndex + 1} of {examQuestions.length}</span>
                       <span>Answered: {Object.keys(examAnswers).length} / {examQuestions.length}</span>
                     </div>
-                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div className="h-1.5 sm:h-2 bg-slate-100 rounded-full overflow-hidden">
                       <div 
                         className="h-full bg-blue-600 transition-all duration-300"
                         style={{ width: `${((currentExamQuestionIndex + 1) / examQuestions.length) * 100}%` }}
@@ -475,58 +482,58 @@ const handleViewReports = () => {
                   </div>
 
                   {examQuestions.length > 0 && examQuestions[currentExamQuestionIndex] && (
-                    <div className="space-y-8">
+                    <div className="space-y-6 sm:space-y-8">
                       <div>
-                        <Badge className="mb-4 bg-blue-100 text-blue-600 border-none px-4 py-1">
+                        <Badge className="mb-3 sm:mb-4 bg-blue-100 text-blue-600 border-none px-3 sm:px-4 py-1 text-xs sm:text-sm">
                           {examQuestions[currentExamQuestionIndex].category} • Module: {examQuestions[currentExamQuestionIndex].moduleTitle}
                         </Badge>
-                        <h3 className="text-2xl font-bold text-slate-800 leading-relaxed">
+                        <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-800 leading-relaxed">
                           {examQuestions[currentExamQuestionIndex].question}
                         </h3>
                       </div>
 
-                      <div className="grid gap-4">
+                      <div className="grid gap-3 sm:gap-4">
                         {examQuestions[currentExamQuestionIndex].options.map((opt, optIdx) => (
                           <button
                             key={optIdx}
                             onClick={() => handleExamAnswer(currentExamQuestionIndex, optIdx)}
-                            className={`p-6 text-left rounded-2xl border-2 transition-all duration-300 font-medium cursor-pointer hover:scale-[1.02]
+                            className={`p-4 sm:p-6 text-left rounded-xl sm:rounded-2xl border-2 transition-all duration-300 font-medium cursor-pointer hover:scale-[1.01] sm:hover:scale-[1.02] text-sm sm:text-base
                               ${examAnswers[currentExamQuestionIndex] === optIdx 
                                 ? 'border-blue-600 bg-blue-50 text-blue-700' 
                                 : 'border-slate-200 hover:border-blue-400 hover:bg-slate-50'
                               }`}
                           >
-                            <span className="inline-block w-8 h-8 rounded-full bg-slate-100 text-center leading-8 mr-4 font-bold">
+                            <span className="inline-block w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-slate-100 text-center leading-6 sm:leading-8 mr-2 sm:mr-4 font-bold text-xs sm:text-sm">
                               {String.fromCharCode(65 + optIdx)}
                             </span>
-                            {opt}
+                            <span className="text-sm sm:text-base">{opt}</span>
                           </button>
                         ))}
                       </div>
 
-                      <div className="flex justify-between pt-8">
+                      <div className="flex flex-col sm:flex-row justify-between gap-3 pt-6 sm:pt-8">
                         <Button 
                           variant="outline" 
                           onClick={goToPreviousQuestion} 
                           disabled={currentExamQuestionIndex === 0} 
-                          className="px-6 py-3 transition-all duration-300 hover:scale-105 hover:bg-blue-600 hover:text-white hover:border-blue-600 disabled:hover:scale-100"
+                          className="px-4 sm:px-6 py-2 sm:py-3 transition-all duration-300 hover:scale-105 hover:bg-blue-600 hover:text-white hover:border-blue-600 disabled:hover:scale-100 text-sm sm:text-base"
                         >
-                          <ChevronLeft className="mr-2" /> Previous
+                          <ChevronLeft className="mr-1 sm:mr-2" size={isMobile ? 16 : 18} /> Previous
                         </Button>
                         
                         {currentExamQuestionIndex === examQuestions.length - 1 ? (
                           <Button 
                             onClick={submitExam} 
-                            className="bg-emerald-600 text-white px-8 py-3 transition-all duration-300 hover:scale-105 hover:bg-emerald-700"
+                            className="bg-emerald-600 text-white px-6 sm:px-8 py-2 sm:py-3 transition-all duration-300 hover:scale-105 hover:bg-emerald-700 text-sm sm:text-base"
                           >
-                            Submit Exam <CheckCircle className="ml-2" size={18} />
+                            Submit Exam <CheckCircle className="ml-1 sm:ml-2" size={isMobile ? 14 : 18} />
                           </Button>
                         ) : (
                           <Button 
                             onClick={goToNextQuestion} 
-                            className="bg-blue-600 text-white px-8 py-3 transition-all duration-300 hover:scale-105 hover:bg-blue-700"
+                            className="bg-blue-600 text-white px-6 sm:px-8 py-2 sm:py-3 transition-all duration-300 hover:scale-105 hover:bg-blue-700 text-sm sm:text-base"
                           >
-                            Next <ChevronRight className="ml-2" />
+                            Next <ChevronRight className="ml-1 sm:ml-2" size={isMobile ? 16 : 18} />
                           </Button>
                         )}
                       </div>
@@ -534,14 +541,14 @@ const handleViewReports = () => {
                   )}
                 </div>
 
-                <div className="border-t p-6 bg-slate-50">
-                  <p className="text-sm text-slate-500 mb-3">Question Navigator</p>
-                  <div className="flex flex-wrap gap-2">
+                <div className="border-t p-4 sm:p-6 bg-slate-50">
+                  <p className="text-xs sm:text-sm text-slate-500 mb-2 sm:mb-3">Question Navigator</p>
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
                     {examQuestions.map((_, idx) => (
                       <button
                         key={idx}
                         onClick={() => setCurrentExamQuestionIndex(idx)}
-                        className={`w-10 h-10 rounded-lg font-bold transition-all duration-300 cursor-pointer hover:scale-110
+                        className={`w-8 h-8 sm:w-10 sm:h-10 text-xs sm:text-sm rounded-lg font-bold transition-all duration-300 cursor-pointer hover:scale-110
                           ${currentExamQuestionIndex === idx 
                             ? 'bg-blue-600 text-white' 
                             : examAnswers[idx] !== undefined 
@@ -556,52 +563,52 @@ const handleViewReports = () => {
                 </div>
               </>
             ) : (
-              <div className="p-12 text-center">
+              <div className="p-6 sm:p-8 md:p-12 text-center">
                 <div className="max-w-2xl mx-auto">
                   {examScore >= 70 ? (
                     <>
-                      <Award size={80} className="text-emerald-500 mx-auto mb-6" />
-                      <h3 className="text-3xl font-black text-slate-800 mb-4">Congratulations!</h3>
-                      <p className="text-xl text-slate-600 mb-4">
+                      <Award size={isMobile ? 60 : 80} className="text-emerald-500 mx-auto mb-4 sm:mb-6" />
+                      <h3 className="text-2xl sm:text-3xl font-black text-slate-800 mb-3 sm:mb-4">Congratulations!</h3>
+                      <p className="text-lg sm:text-xl text-slate-600 mb-3 sm:mb-4">
                         You scored {Math.round(examScore)}% ({Object.keys(examAnswers).filter((k, idx) => examAnswers[idx] === examQuestions[idx]?.correctAnswer).length} / {examQuestions.length} correct)
                       </p>
-                      <p className="text-slate-500 mb-8">You have successfully passed the certification exam!</p>
-                      <div className="space-y-4">
+                      <p className="text-sm sm:text-base text-slate-500 mb-6 sm:mb-8">You have successfully passed the certification exam!</p>
+                      <div className="space-y-3 sm:space-y-4">
                         <input 
-                          className="w-full p-4 border-2 border-slate-200 rounded-xl text-center text-lg focus:border-blue-600 outline-none transition-all duration-300 hover:scale-[1.01]" 
+                          className="w-full p-3 sm:p-4 border-2 border-slate-200 rounded-xl text-center text-base sm:text-lg focus:border-blue-600 outline-none transition-all duration-300 hover:scale-[1.01]" 
                           placeholder="Enter your full name for certificate" 
                           value={userName}
                           onChange={(e) => setUserName(e.target.value)}
                         />
                         <Button 
-                          className="bg-emerald-600 text-white px-8 py-4 text-lg rounded-xl w-full transition-all duration-300 hover:scale-105 hover:bg-emerald-700" 
+                          className="bg-emerald-600 text-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg rounded-xl w-full transition-all duration-300 hover:scale-105 hover:bg-emerald-700" 
                           onClick={proceedToCertificate} 
                           disabled={!userName}
                         >
-                          Generate Certificate <Download className="ml-2" />
+                          Generate Certificate <Download className="ml-2" size={isMobile ? 16 : 18} />
                         </Button>
                       </div>
                     </>
                   ) : (
                     <>
-                      <X size={80} className="text-red-500 mx-auto mb-6" />
-                      <h3 className="text-3xl font-black text-slate-800 mb-4">Not This Time</h3>
-                      <p className="text-xl text-slate-600 mb-4">
+                      <X size={isMobile ? 60 : 80} className="text-red-500 mx-auto mb-4 sm:mb-6" />
+                      <h3 className="text-2xl sm:text-3xl font-black text-slate-800 mb-3 sm:mb-4">Not This Time</h3>
+                      <p className="text-lg sm:text-xl text-slate-600 mb-3 sm:mb-4">
                         You scored {Math.round(examScore)}% ({Object.keys(examAnswers).filter((k, idx) => examAnswers[idx] === examQuestions[idx]?.correctAnswer).length} / {examQuestions.length} correct)
                       </p>
-                      <p className="text-slate-500 mb-4">The passing score is 70%. Please review the modules and try again.</p>
+                      <p className="text-sm sm:text-base text-slate-500 mb-4 sm:mb-6">The passing score is 70%. Please review the modules and try again.</p>
                       <Button 
-                        className="bg-blue-600 text-white px-8 py-4 text-lg rounded-xl transition-all duration-300 hover:scale-105 hover:bg-blue-700" 
+                        className="bg-blue-600 text-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg rounded-xl transition-all duration-300 hover:scale-105 hover:bg-blue-700" 
                         onClick={startFinalExam}
                       >
-                        Retake Exam <RotateCcw className="ml-2" />
+                        Retake Exam <RotateCcw className="ml-2" size={isMobile ? 16 : 18} />
                       </Button>
                     </>
                   )}
                   
                   <Button 
                     variant="ghost" 
-                    className="mt-6 text-slate-500 transition-all duration-300 hover:scale-105 hover:bg-slate-100" 
+                    className="mt-4 sm:mt-6 text-slate-500 transition-all duration-300 hover:scale-105 hover:bg-slate-100 text-sm sm:text-base" 
                     onClick={resetAndExitExam}
                   >
                     Exit to Dashboard
@@ -612,24 +619,24 @@ const handleViewReports = () => {
           </motion.div>
         )}
 
-        {/* MODULE GRID */}
+        {/* MODULE GRID - Mobile Responsive */}
         {!isFinalExam && !showCertificate && (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             {modules.map((m) => {
               const Icon = m.icon;
               const done = shieldProgress.modulesCompleted.includes(m.id);
               return (
-                <Card key={m.id} className="bg-white border-slate-100 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-[1.02]">
-                  <CardHeader>
-                    <div className={`${m.color} w-12 h-12 rounded-xl flex items-center justify-center text-white mb-4 transition-all duration-300 hover:scale-110`}>
-                      <Icon size={24} />
+                <Card key={m.id} className="bg-white border-slate-100 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-[1.01] sm:hover:scale-[1.02]">
+                  <CardHeader className="p-4 sm:p-6">
+                    <div className={`${m.color} w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center text-white mb-3 sm:mb-4 transition-all duration-300 hover:scale-110`}>
+                      <Icon size={isMobile ? 20 : 24} />
                     </div>
-                    <CardTitle className="text-xl font-bold text-slate-800">{m.title}</CardTitle>
-                    <CardDescription className="text-xs font-bold text-blue-500 uppercase tracking-wider">{m.category}</CardDescription>
+                    <CardTitle className="text-lg sm:text-xl font-bold text-slate-800">{m.title}</CardTitle>
+                    <CardDescription className="text-[10px] sm:text-xs font-bold text-blue-500 uppercase tracking-wider">{m.category}</CardDescription>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
                     <Button 
-                      className={`w-full py-7 rounded-2xl text-md transition-all duration-300 transform active:scale-95 font-bold border-2 shadow-sm cursor-pointer hover:scale-105 hover:shadow-xl hover:-translate-y-1 ${done ? 'bg-emerald-600 border-emerald-600 hover:bg-emerald-700' : 'bg-gray-700 border-gray-700 hover:bg-blue-700 hover:border-blue-700'} text-white shadow-lg`}
+                      className={`w-full py-5 sm:py-7 rounded-xl sm:rounded-2xl text-sm sm:text-md transition-all duration-300 transform active:scale-95 font-bold border-2 shadow-sm cursor-pointer hover:scale-105 hover:shadow-xl hover:-translate-y-1 ${done ? 'bg-emerald-600 border-emerald-600 hover:bg-emerald-700' : 'bg-gray-700 border-gray-700 hover:bg-blue-700 hover:border-blue-700'} text-white shadow-lg`}
                       onClick={() => setActiveModule(m)}
                     >
                       {done ? 'Review Material' : 'Start Learning'}
@@ -641,16 +648,16 @@ const handleViewReports = () => {
           </div>
         )}
 
-        {/* FINAL EXAM TRIGGER */}
+        {/* FINAL EXAM TRIGGER - Mobile Responsive */}
         {shieldProgress.modulesCompleted.length === 12 && !isFinalExam && !showCertificate && (
-          <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="mt-16 text-center bg-slate-900 p-12 rounded-[3rem] text-white shadow-2xl">
-            <h2 className="text-4xl font-black mb-4">Certification Exam Ready</h2>
-            <p className="mb-8 text-slate-400 max-w-xl mx-auto">
+          <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="mt-8 sm:mt-16 text-center bg-slate-900 p-6 sm:p-8 md:p-12 rounded-2xl sm:rounded-3xl text-white shadow-2xl">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black mb-3 sm:mb-4">Certification Exam Ready</h2>
+            <p className="text-sm sm:text-base text-slate-400 mb-6 sm:mb-8 max-w-xl mx-auto px-2">
               You have completed all 12 modules! The final exam consists of 24 randomly selected questions covering all modules. 
               You need 70% to pass and earn your certificate.
             </p>
             <Button 
-              className="bg-blue-600 px-12 py-8 text-2xl font-black rounded-2xl transition-all duration-300 hover:scale-105 hover:bg-blue-700" 
+              className="bg-blue-600 px-8 sm:px-12 py-4 sm:py-8 text-lg sm:text-2xl font-black rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-105 hover:bg-blue-700 w-full sm:w-auto" 
               onClick={startFinalExam}
             >
               BEGIN FINAL EXAM
@@ -658,67 +665,67 @@ const handleViewReports = () => {
           </motion.div>
         )}
 
-        {/* STUDY MODAL */}
+        {/* STUDY MODAL - Mobile Responsive */}
         <AnimatePresence>
           {activeModule && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 bg-slate-900/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
-              <div className="bg-white rounded-[2.5rem] w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col border-[10px] border-white">
-                <div className="p-6 border-b flex justify-between items-center">
-                  <h3 className="font-black text-xl text-slate-800">{activeModule.title}</h3>
-                  <Button variant="ghost" className="rounded-full hover:bg-slate-100 transition-all duration-300 hover:scale-105" onClick={() => {setActiveModule(null); setModuleQuizIndex(0); setAnswers({});}}><X size={24} /></Button>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 bg-slate-900/95 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4">
+              <div className="bg-white rounded-2xl sm:rounded-3xl w-full max-w-4xl max-h-[95vh] sm:max-h-[90vh] overflow-hidden flex flex-col border-[5px] sm:border-[10px] border-white">
+                <div className="p-4 sm:p-6 border-b flex justify-between items-center">
+                  <h3 className="font-black text-lg sm:text-xl text-slate-800">{activeModule.title}</h3>
+                  <Button variant="ghost" className="rounded-full hover:bg-slate-100 transition-all duration-300 hover:scale-105 p-2" onClick={() => {setActiveModule(null); setModuleQuizIndex(0); setAnswers({});}}><X size={isMobile ? 20 : 24} /></Button>
                 </div>
 
-                <div className="p-10 overflow-y-auto flex-1">
+                <div className="p-4 sm:p-6 md:p-8 lg:p-10 overflow-y-auto flex-1">
                   {moduleQuizIndex === 0 ? (
                     <div className="max-w-2xl mx-auto">
-                      <p className="text-lg leading-relaxed text-slate-700 font-serif text-justify" style={{ textAlignLast: 'left' }}>
-                        <span className="text-5xl font-black mr-2 float-left text-blue-600 leading-none">{activeModule.note.charAt(0)}</span>
+                      <p className="text-base sm:text-lg leading-relaxed text-slate-700 font-serif text-justify" style={{ textAlignLast: 'left' }}>
+                        <span className="text-3xl sm:text-5xl font-black mr-1 sm:mr-2 float-left text-blue-600 leading-none">{activeModule.note.charAt(0)}</span>
                         {activeModule.note.slice(1)}
                       </p>
-                      <a href={activeModule.externalLink} target="_blank" rel="noreferrer" className="mt-8 inline-flex items-center gap-2 text-blue-600 font-bold hover:underline transition-all duration-300 hover:scale-105">
-                        <ExternalLink size={18} /> Explore More Resources
+                      <a href={activeModule.externalLink} target="_blank" rel="noreferrer" className="mt-4 sm:mt-8 inline-flex items-center gap-2 text-blue-600 font-bold hover:underline transition-all duration-300 hover:scale-105 text-sm sm:text-base">
+                        <ExternalLink size={isMobile ? 14 : 18} /> Explore More Resources
                       </a>
                     </div>
                   ) : (
-                    <div className="max-w-xl mx-auto space-y-8">
+                    <div className="max-w-xl mx-auto space-y-6 sm:space-y-8">
                       <div className="text-center">
-                        <Badge className="mb-4 bg-blue-100 text-blue-600 border-none">Question {moduleQuizIndex} of 2</Badge>
-                        <h2 className="text-xl font-bold mb-6">{activeModule.quiz[moduleQuizIndex-1].question}</h2>
+                        <Badge className="mb-3 sm:mb-4 bg-blue-100 text-blue-600 border-none text-xs sm:text-sm">Question {moduleQuizIndex} of 2</Badge>
+                        <h2 className="text-base sm:text-lg md:text-xl font-bold mb-4 sm:mb-6">{activeModule.quiz[moduleQuizIndex-1].question}</h2>
                       </div>
-                      <div className="grid gap-3">
+                      <div className="grid gap-2 sm:gap-3">
                         {activeModule.quiz[moduleQuizIndex-1].options.map((opt, i) => (
                           <Button 
                             key={i} 
                             variant="outline" 
-                            className={`py-8 text-md border-2 rounded-2xl transition-all duration-300 cursor-pointer hover:scale-[1.02] ${answers[moduleQuizIndex] === i ? 'border-blue-600 bg-blue-50' : 'border-slate-100 hover:border-blue-400'}`} 
+                            className={`py-5 sm:py-8 text-sm sm:text-md border-2 rounded-xl sm:rounded-2xl transition-all duration-300 cursor-pointer hover:scale-[1.01] whitespace-normal break-words h-auto ${answers[moduleQuizIndex] === i ? 'border-blue-600 bg-blue-50' : 'border-slate-100 hover:border-blue-400'}`} 
                             onClick={() => setAnswers({...answers, [moduleQuizIndex]: i})}
                           >
-                            <span className="inline-block w-6 h-6 rounded-full bg-slate-200 text-center leading-6 mr-3 text-xs font-bold">
+                            <span className="inline-block w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-slate-200 text-center leading-5 sm:leading-6 mr-2 sm:mr-3 text-[10px] sm:text-xs font-bold flex-shrink-0">
                               {String.fromCharCode(65 + i)}
                             </span>
-                            {opt}
+                            <span className="text-left text-xs sm:text-sm">{opt}</span>
                           </Button>
                         ))}
                       </div>
-                      <div className="flex justify-between mt-10">
-                         <Button variant="link" onClick={() => setModuleQuizIndex(0)} className="text-slate-400 transition-all duration-300 hover:scale-105"><ChevronLeft className="mr-1"/> Review Note</Button>
-                         <Button className="transition-all duration-300 transform active:scale-95 font-bold border-2 shadow-sm cursor-pointer hover:scale-105 hover:shadow-xl hover:-translate-y-1 hover:bg-blue-700 hover:text-white hover:border-blue-700 bg-slate-900 text-white px-8" 
+                      <div className="flex flex-col sm:flex-row justify-between gap-3 mt-6 sm:mt-10">
+                        <Button variant="link" onClick={() => setModuleQuizIndex(0)} className="text-slate-400 transition-all duration-300 hover:scale-105 text-sm sm:text-base"><ChevronLeft className="mr-1" size={isMobile ? 14 : 16}/> Review Note</Button>
+                        <Button className="transition-all duration-300 transform active:scale-95 font-bold border-2 shadow-sm cursor-pointer hover:scale-105 hover:shadow-xl hover:-translate-y-1 hover:bg-blue-700 hover:text-white hover:border-blue-700 bg-slate-900 text-white px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base" 
                                onClick={() => {
                                  if (answers[moduleQuizIndex] === undefined) return alert("Please select an answer before continuing");
                                  if (moduleQuizIndex < 2) setModuleQuizIndex(moduleQuizIndex + 1);
                                  else { completeModule(activeModule.id); setActiveModule(null); setModuleQuizIndex(0); setAnswers({}); }
                                }}>
-                               {moduleQuizIndex === 2 ? 'Complete Module' : 'Next'} <ChevronRight size={18}/>
-                         </Button>
+                               {moduleQuizIndex === 2 ? 'Complete Module' : 'Next'} <ChevronRight size={isMobile ? 14 : 18}/>
+                        </Button>
                       </div>
                     </div>
                   )}
                 </div>
 
                 {moduleQuizIndex === 0 && (
-                  <div className="p-8 border-t bg-slate-50 flex justify-center">
+                  <div className="p-4 sm:p-8 border-t bg-slate-50 flex justify-center">
                     <Button 
-                      className="bg-blue-600 text-white px-12 py-6 text-lg rounded-2xl transition-all duration-300 hover:scale-105 hover:bg-blue-700" 
+                      className="bg-blue-600 text-white px-8 sm:px-12 py-4 sm:py-6 text-base sm:text-lg rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-105 hover:bg-blue-700 w-full sm:w-auto" 
                       onClick={() => setModuleQuizIndex(1)}
                     >
                       Start Assessment
@@ -730,42 +737,42 @@ const handleViewReports = () => {
           )}
         </AnimatePresence>
 
-        {/* CERTIFICATE SCREEN */}
+        {/* CERTIFICATE SCREEN - Mobile Responsive */}
         {showCertificate && (
-          <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-8">
-            <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="max-w-xl w-full px-6">
-              <CheckCircle size={64} className="text-emerald-500 mx-auto mb-6" />
-              <h2 className="text-4xl font-black mb-2">Course Completed</h2>
-              <p className="text-slate-500 mb-8">You have successfully passed the certification exam!</p>
+          <div className="flex flex-col items-center justify-center min-h-[50vh] sm:min-h-[60vh] text-center space-y-6 sm:space-y-8 px-4">
+            <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="max-w-xl w-full">
+              <CheckCircle size={isMobile ? 48 : 64} className="text-emerald-500 mx-auto mb-4 sm:mb-6" />
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black mb-2">Course Completed</h2>
+              <p className="text-sm sm:text-base text-slate-500 mb-6 sm:mb-8">You have successfully passed the certification exam!</p>
               
               <div className="grid grid-cols-1 gap-3">
                 <Button 
-                  className="bg-emerald-600 text-white py-8 text-xl rounded-2xl transition-all duration-300 hover:scale-105 hover:bg-emerald-700" 
+                  className="bg-emerald-600 text-white py-5 sm:py-8 text-lg sm:text-xl rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-105 hover:bg-emerald-700" 
                   onClick={downloadCertificate}
                   disabled={isDownloading}
                 >
                   {isDownloading ? (
                     <>
-                      <Loader2 className="mr-2 animate-spin" /> Generating Certificate...
+                      <Loader2 className="mr-2 animate-spin" size={isMobile ? 16 : 20} /> Generating Certificate...
                     </>
                   ) : (
                     <>
-                      <Download className="mr-2" /> Download Certificate
+                      <Download className="mr-2" size={isMobile ? 16 : 20} /> Download Certificate
                     </>
                   )}
                 </Button>
                 
                 <Button 
                   variant="outline" 
-                  className="border-slate-200 py-6 text-slate-600 rounded-2xl transition-all duration-300 hover:scale-105 hover:bg-slate-100 hover:border-blue-400" 
+                  className="border-slate-200 py-4 sm:py-6 text-slate-600 rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-105 hover:bg-slate-100 hover:border-blue-400 text-sm sm:text-base" 
                   onClick={() => {setShowCertificate(false);}}
                 >
-                  <LayoutDashboard className="mr-2" size={18} /> Exit to Dashboard
+                  <LayoutDashboard className="mr-2" size={isMobile ? 14 : 18} /> Exit to Dashboard
                 </Button>
               </div>
             </motion.div>
 
-            {/* CERTIFICATE AREA - WITH SAFE HEX COLORS */}
+            {/* CERTIFICATE AREA - Mobile Optimized */}
             <div style={{ position: 'fixed', left: '-9999px', top: '-9999px', visibility: 'hidden', zIndex: -1 }}>
               <div 
                 ref={certificateRef} 
@@ -776,7 +783,7 @@ const handleViewReports = () => {
                   backgroundColor: '#ffffff', 
                   color: '#0f172a',
                   border: '20px solid #0f172a',
-                  padding: '80px',
+                  padding: isMobile ? '40px' : '80px',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
@@ -787,22 +794,22 @@ const handleViewReports = () => {
               >
                 <div style={{ textAlign: 'center', width: '100%' }}>
                   <p style={{ fontWeight: 'bold', letterSpacing: '0.4em', color: '#2563eb', fontSize: '14px', marginBottom: '20px' }}>OFFICIAL CREDENTIAL</p>
-                  <h1 style={{ fontSize: '42pt', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '-0.025em', marginBottom: '20px' }}>Certificate of Mastery</h1>
-                  <p style={{ fontSize: '20px', fontStyle: 'italic', color: '#94a3b8', marginBottom: '10px' }}>This certifies that</p>
-                  <h2 style={{ fontSize: '36pt', fontWeight: '900', borderBottom: '4px solid #e2e8f0', paddingBottom: '16px', display: 'inline-block', paddingLeft: '40px', paddingRight: '40px', marginBottom: '20px' }}>{userName || "Graduate"}</h2>
-                  <p style={{ fontSize: '18px', maxWidth: '600px', margin: '0 auto', lineHeight: '1.5', marginTop: '30px' }}>
+                  <h1 style={{ fontSize: isMobile ? '32pt' : '42pt', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '-0.025em', marginBottom: '20px' }}>Certificate of Mastery</h1>
+                  <p style={{ fontSize: isMobile ? '16px' : '20px', fontStyle: 'italic', color: '#94a3b8', marginBottom: '10px' }}>This certifies that</p>
+                  <h2 style={{ fontSize: isMobile ? '28pt' : '36pt', fontWeight: '900', borderBottom: '4px solid #e2e8f0', paddingBottom: '16px', display: 'inline-block', paddingLeft: isMobile ? '20px' : '40px', paddingRight: isMobile ? '20px' : '40px', marginBottom: '20px' }}>{userName || "Graduate"}</h2>
+                  <p style={{ fontSize: isMobile ? '14px' : '18px', maxWidth: '600px', margin: '0 auto', lineHeight: '1.5', marginTop: '30px' }}>
                     Has successfully completed the 12-module specialized curriculum in: 
                     <span style={{ display: 'block', fontWeight: 'bold', color: '#0f172a', marginTop: '12px', textDecoration: 'underline' }}>UK Digital Ethics, Awareness, and Online Responsibility.</span>
                   </p>
                   <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '24px' }}>Certification ID: CERT-{Math.random().toString(36).substr(2, 9).toUpperCase()}</p>
                 </div>
-                <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', paddingLeft: '40px', paddingRight: '40px', marginTop: '32px' }}>
+                <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', paddingLeft: isMobile ? '20px' : '40px', paddingRight: isMobile ? '20px' : '40px', marginTop: '32px' }}>
                   <div style={{ textAlign: 'left', fontFamily: 'monospace' }}>
                     <p style={{ fontSize: '8px', textTransform: 'uppercase', fontWeight: 'bold', color: '#94a3b8', marginBottom: '4px' }}>Issue Date</p>
                     <p style={{ fontWeight: 'bold', fontSize: '14px' }}>{new Date().toLocaleDateString('en-GB')}</p>
                   </div>
                   <div style={{ textAlign: 'right' }}>
-                    <div style={{ width: '80px', height: '80px', backgroundColor: '#1e293b', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', fontWeight: '900', fontSize: '20px', border: '4px solid #e2e8f0' }}>SE</div>
+                    <div style={{ width: isMobile ? '60px' : '80px', height: isMobile ? '60px' : '80px', backgroundColor: '#1e293b', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', fontWeight: '900', fontSize: isMobile ? '16px' : '20px', border: '4px solid #e2e8f0' }}>SE</div>
                   </div>
                 </div>
               </div>
